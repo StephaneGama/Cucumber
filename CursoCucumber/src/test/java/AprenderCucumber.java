@@ -1,3 +1,8 @@
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.junit.Assert;
 
 import cucumber.api.java.en.*;
@@ -44,7 +49,33 @@ import cucumber.api.java.pt.Quando;
     	    
     	    
     	}
+    	
+    	Date entrega = new Date();
 
+    	@Dado("^que a entrega é (\\d+)/(\\d+)/(\\d+)$")
+    	public void queAEntregaÉ(int dia, int mes, int ano) throws Throwable {
+    	    Calendar cal = Calendar.getInstance();
+    	    cal.set(Calendar.DAY_OF_MONTH,dia);
+    	    cal.set(Calendar.MONTH, mes);
+    	    cal.set(Calendar.YEAR, ano);
+    	    entrega = cal.getTime();
+    	    }
+
+    	@Quando("^a entrega atrasar em (\\d+) dias$")
+    	public void aEntregaAtrasarEmDias(int arg1) throws Throwable {
+    	    Calendar cal = Calendar.getInstance ();
+    	    cal.setTime(entrega);
+    	    cal.add(Calendar.DAY_OF_MONTH,arg1);
+    	    entrega = cal.getTime();
+    	}
+
+    	@Então("^a entrega será efetuada em (\\d{2}\\/\\d{2}\\/\\d{4})$")
+    	public void aEntregaSeráEfetuadaEm(String data) throws Throwable {
+    	    DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    	    String dataFormatada = format.format(entrega);
+    	    String dataformatada = format.format(entrega);
+    	    Assert.assertEquals(data, dataformatada);
+    	}
     }
 
 
